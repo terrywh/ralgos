@@ -1,0 +1,6 @@
+.ccls-cache
+.vscode
+compile_commands.json
+stage/
+release/
+debug/

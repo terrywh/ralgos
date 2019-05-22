@@ -1,0 +1,6 @@
+var/qqwry.dat filter=lfs diff=lfs merge=lfs -text
+var/hmm_model.utf8 filter=lfs diff=lfs merge=lfs -text
+var/idf.utf8 filter=lfs diff=lfs merge=lfs -text
+var/jieba.dict.utf8 filter=lfs diff=lfs merge=lfs -text
+var/stop_words.utf8 filter=lfs diff=lfs merge=lfs -text
+var/user.dict.utf8 filter=lfs diff=lfs merge=lfs -text
