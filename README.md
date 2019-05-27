@@ -3,6 +3,8 @@
 * `address` IPv4 地址映射 `address {ipv4}`，返回字符串数组（城市/详情）（纯真 IP 库）
 * `segment` 简单分词, `segment {sentence} [HMM]`, 返回字符串数组（若干词汇），可选 `HMM` 参数启用额外的分词模型（速度有所降低，应对未知词汇时更准确）；
 
+在原公司的使用中发现，基于 Redis 协议提供了相较 HTTP 接口约 4 倍的性能提升；
+
 ### 依赖
 
 * https://github.com/yanyiwu/cppjieba

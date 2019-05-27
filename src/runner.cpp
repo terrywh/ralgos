@@ -19,7 +19,8 @@ void runner::init(int argc, char* argv[]) {
     if(!cfg->init(argc, argv)) exit(-1);
     pool_.resize(cfg->wrkct);
     for(std::size_t i=0;i<pool_.size();++i) {
-        ctxs_.push_back(new boost::asio::io_context());
+        ctxs_.push_back( new boost::asio::io_context() );
+        work_.push_back( boost::asio::make_work_guard(*ctxs_[i]) );
     }
     svr = new server();
     coroutine::start(ctx().get_executor(), std::bind(&server::run, svr, std::placeholders::_1));
@@ -27,7 +28,6 @@ void runner::init(int argc, char* argv[]) {
 
 void runner::run() {
     for(std::size_t i=0;i<pool_.size();++i) {
-        work_.push_back( boost::asio::make_work_guard(*ctxs_[i]) );
         pool_[i] = std::thread([i] (runner* self) {
             self->ctxs_[i]->run();
         }, this);

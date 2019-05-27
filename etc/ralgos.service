@@ -1,0 +1,12 @@
+[Unit]
+Description=Work Order Adapter
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=simple
+ExecStart=/data/htdocs/ralgos/bin/ralgos --http=0.0.0.0:8888 --c=8
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

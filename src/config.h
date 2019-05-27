@@ -4,7 +4,7 @@
 class config {
 public:
 	std::filesystem::path            droot;
-	std::uint8_t                     wrkct;
+	std::uint16_t                    wrkct;
 	boost::asio::ip::tcp::endpoint address;
 	std::filesystem::path            qqwry;
 	std::string                      jdict;

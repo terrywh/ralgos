@@ -28,6 +28,7 @@ add_executable(ralgos
     src/session.cpp
     src/handler/unknown.cpp
     src/handler/dummy.cpp
+    src/handler/ping.cpp
     src/handler/segment.cpp
     src/handler/address.cpp
 )

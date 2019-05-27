@@ -11,13 +11,12 @@ handler_segment::handler_segment()
 
 }
 
-void handler_segment::handle(std::shared_ptr<redisReply> req
+void handler_segment::run(std::shared_ptr<redisReply> req
     , std::shared_ptr<session> res
     , coroutine_handler& ch) {
 
     if(req->elements < 2) {
-        std::string err = (boost::format("-ERR wrong number of arguments for command '%s'\r\n") % req->element[0]->str).str();
-        res->write(boost::asio::buffer(err.data(), err.size()), ch);
+        res->write((boost::format("-ERR wrong number of arguments for command '%s'\r\n") % std::string_view(req->element[0]->str, req->element[0]->len)).str(), ch);
         return;
     }
 
@@ -30,5 +29,5 @@ void handler_segment::handle(std::shared_ptr<redisReply> req
         ss << '$' << rs[i].size() << '\r' << '\n' << rs[i] << '\r' << '\n';
     }
     std::string str = ss.str();
-    res->write(boost::asio::buffer(str.data(), str.size()), ch);
+    res->write(ss.str(), ch);
 }

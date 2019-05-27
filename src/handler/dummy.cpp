@@ -2,7 +2,7 @@
 #include "../session.h"
 #include "../server.h"
 
-void handler_dummy::handle(std::shared_ptr<redisReply> req
+void handler_dummy::run(std::shared_ptr<redisReply> req
     , std::shared_ptr<session> res
     , coroutine_handler& ch) {
 

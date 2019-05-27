@@ -9,17 +9,22 @@ bool config::init(int argc, char* argv[]) {
 		http_addr = "127.0.0.1:8696",
 		file_qqwry = droot.string() + "/var/qqwry.dat",
 		dict_path = droot.string() + "/var";
-	std::uint8_t workers = std::thread::hardware_concurrency()/2;
+	std::uint16_t workers = std::thread::hardware_concurrency()/2;
 
 	desc.add_options()
 			("help,h", "帮助信息")
-			("c", boost::program_options::value<std::uint8_t>(&workers)->default_value(workers), "工作线程数量")
+			("c", boost::program_options::value<std::uint16_t>(&workers)->default_value(workers), "工作线程数量")
 			("http",  boost::program_options::value<std::string>(&http_addr)->default_value(http_addr), "HTTP 服务监听端口")
             ("qqwry", boost::program_options::value<std::string>(&file_qqwry)->default_value(file_qqwry), "用于 IPv4 地址查询的纯真库")
 			("jdict", boost::program_options::value<std::string>(&dict_path)->default_value(dict_path), "结巴分词词库目录");
 
 	boost::program_options::variables_map vm;
-	boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+	try{
+		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+	}catch(const std::exception& ex) {
+		std::cerr << desc << std::endl;
+		return false;
+	}
 	boost::program_options::notify(vm); // 外部变量更新通知
 
 	if(vm.count("help") > 0) {

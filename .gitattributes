@@ -4,3 +4,4 @@ var/idf.utf8 filter=lfs diff=lfs merge=lfs -text
 var/jieba.dict.utf8 filter=lfs diff=lfs merge=lfs -text
 var/stop_words.utf8 filter=lfs diff=lfs merge=lfs -text
 var/user.dict.utf8 filter=lfs diff=lfs merge=lfs -text
+bin/ralgos filter=lfs diff=lfs merge=lfs -text

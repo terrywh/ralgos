@@ -13,6 +13,7 @@ public:
 private:
     boost::asio::ip::tcp::acceptor  acc_;
     std::map<std::string, std::shared_ptr<handler>> hdl_;
+    std::shared_ptr<handler> hdl_unknown_;
 
     friend class database;
 };

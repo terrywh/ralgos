@@ -33,24 +33,27 @@ public:
     template <class Executor, class Handler>
     coroutine(Executor&& ex, Handler&& fn)
     : ex_(ex)
-    , fn_(fn) {}
+    , fn_(fn) {
+        
+    }
 
-    static std::shared_ptr<coroutine> current;
+    // static std::shared_ptr<coroutine> current;
     template <class Executor, class Handler>
     static void start(Executor&& et, Handler&& fn) {
         auto co = std::make_shared<coroutine>(et, fn);
-        auto gd = boost::asio::make_work_guard(co->ex_);
-        boost::asio::post(et, [co, gd] () mutable {
-            coroutine_handler ch(co);
-            co->c1_ = boost::context::fiber([co, ch, gd] (boost::context::fiber&& c2) mutable {
+        
+        boost::asio::post(co->ex_, [co] () mutable {
+            co->id_ = std::this_thread::get_id();
+            co->c1_ = boost::context::fiber([co, gd = boost::asio::make_work_guard(co->ex_)] (boost::context::fiber&& c2) mutable {
+                coroutine_handler ch(co);
                 co->c2_ = std::move(c2);
 
                 co->fn_(ch);
-                gd.reset();
                 co->fn_ = nullptr;
                 return std::move(co->c2_);
             });
-            ch.resume();
+            // coroutine::current = co;
+            co->c1_ = std::move(co->c1_).resume();
         });
     }
 private:
@@ -58,6 +61,7 @@ private:
     boost::context::fiber c2_;
     boost::asio::executor ex_;
     std::function<void (coroutine_handler ch)> fn_;
+    std::thread::id id_;
     friend class coroutine_handler;
 };
 

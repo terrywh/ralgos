@@ -10,15 +10,16 @@ coroutine_handler::coroutine_handler(std::shared_ptr<coroutine> co)
 }
 
 coroutine_handler& coroutine_handler::operator[](boost::system::error_code& error) {
+    assert(co_->id_ == std::this_thread::get_id());
     error_.reset(&error, boost::null_deleter());
     return *this;
 }
 
 void coroutine_handler::resume() {
     // 恢复实际执行的上下文，可能需要对应执行器（线程）
-    std::shared_ptr<coroutine> co = co_;
-    boost::asio::post(co_->ex_, [co] () {
-        coroutine::current = co;
+    boost::asio::post(co_->ex_, [co = co_] () {
+        assert(co->id_ == std::this_thread::get_id());
+        // coroutine::current = co;
         co->c1_ = std::move(co->c1_).resume();
     });
 }
@@ -36,9 +37,10 @@ void coroutine_handler::reset() {
 }
 
 void coroutine_handler::suspend() {
-    // 暂定本身就位于当前执行器（线程）
-    coroutine::current.reset();
+    assert(co_->id_ == std::this_thread::get_id());
+    // 一般当前上下文位于当前执行器（线程）
+    // coroutine::current.reset();
     co_->c2_ = std::move(co_->c2_).resume();
 }
 
-std::shared_ptr<coroutine> coroutine::current;
+// std::shared_ptr<coroutine> coroutine::current;

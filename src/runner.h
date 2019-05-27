@@ -13,14 +13,13 @@ public:
 
     void run();
     boost::asio::io_context& ctx() {
-        if(++ctxi_ >= ctxs_.size()) ctxi_ = 0;
-        return *ctxs_[ctxi_];
+        return *ctxs_[++ctxi_ % ctxs_.size()];
     }
     config* cfg;
     server* svr;
 private:
-    std::vector<std::thread>             pool_;
+    std::vector<std::thread>              pool_;
     std::vector<boost::asio::io_context*> ctxs_;
-    std::size_t                          ctxi_;
+    std::atomic_int8_t                    ctxi_;
     std::vector<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_;
 };
